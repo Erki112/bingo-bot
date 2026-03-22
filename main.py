@@ -7,9 +7,16 @@ from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 # 1. Flask setup
 app = Flask(__name__, template_folder='templates')
 
-@app.route('/')
-def home():
-    return "Server is Running!"
+# Koodii kana qofa main.py keessatti sirreessi
+@app.route('/bingo/<int:user_id>')
+def bingo(user_id):
+    return render_template('index.html', user_id=user_id)
+
+# Akkasumas sarara kanaan gadii kooppii godhuun mirkaneessi
+@app.route('/bingo')
+def bingo_simple():
+    return render_template('index.html')
+
 
 # KAN ATI JETTE: User ID akka fudhatu taasifameera
 @app.route('/bingo/<int:user_id>')
