@@ -5,11 +5,13 @@ from telegram import Update, WebAppInfo, InlineKeyboardButton, InlineKeyboardMar
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
 # 1. Web Server for Render
-app = Flask(__name__)
+# Bakka kanaan duraa kanaan bakka buusi
+app = Flask(__name__, template_folder='templates')
 
 @app.route('/')
 def home():
     return render_template('index.html')
+
 
 def run():
     port = int(os.environ.get('PORT', 8080))
