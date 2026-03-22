@@ -25,7 +25,7 @@ TOKEN = "8487920836:AAFe77nalADov0H7ufj4GWZb0gYiEq5xdBQ"
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Linkii Render keetii asitti jijjiiruun baay'ee murteessaadha!
     # Erga 'Deploy' jettee booda linkii Render siif kennu as galchi.
-    WEB_APP_URL = "https://bingo-bot-ethiopia.onrender.com" 
+    WEB_APP_URL = "https://bingo-bot-g7ua.onrender.com" 
     
     keyboard = [
         [InlineKeyboardButton("🎮 Join Professional Bingo", web_app=WebAppInfo(url=WEB_APP_URL))]
