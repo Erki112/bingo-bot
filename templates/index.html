@@ -3,52 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Bingo Betting Bot</title>
+    <title>Qaro Bingo Professional</title>
     <style>
         body { background-color: #0f172a; color: white; font-family: 'Segoe UI', sans-serif; text-align: center; margin: 0; padding: 10px; }
-        .wallet-section { background: linear-gradient(135deg, #1e293b, #334155); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #38bdf8; }
-        .balance { font-size: 28px; color: #38bdf8; font-weight: bold; }
-        .ball-caller { background: #ef4444; width: 70px; height: 70px; line-height: 70px; border-radius: 50%; font-size: 30px; margin: 15px auto; border: 4px solid #fff; box-shadow: 0 0 20px rgba(239, 68, 68, 0.4); }
+        .wallet-section { background: linear-gradient(135deg, #1e293b, #065f46); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #10b981; }
+        .balance { font-size: 28px; color: #10b981; font-weight: bold; }
+        .stake-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 15px; }
+        .stake-btn { padding: 12px; border-radius: 8px; border: 2px solid #334155; background: #1e293b; color: white; cursor: pointer; font-weight: bold; font-size: 14px; }
+        .stake-btn.selected { border-color: #fbbf24; background: #fbbf24; color: black; box-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
+        .ball-caller { background: #ef4444; width: 65px; height: 65px; line-height: 65px; border-radius: 50%; font-size: 28px; margin: 10px auto; border: 3px solid #fff; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
         .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; padding: 10px; background: #1e293b; border-radius: 12px; }
-        .cell { background: #334155; border: 1px solid #475569; padding: 15px 0; border-radius: 8px; font-weight: bold; cursor: pointer; font-size: 18px; }
+        .cell { background: #334155; border: 1px solid #475569; padding: 12px 0; border-radius: 8px; font-weight: bold; font-size: 16px; }
         .cell.matched { background: #22c55e; color: white; transform: scale(1.05); border-color: #fff; }
-        .controls { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 15px; }
-        .btn { padding: 12px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer; font-size: 14px; }
-        .btn-deposit { background: #eab308; color: #000; }
-        .btn-withdraw { background: #94a3b8; color: #000; }
-        .btn-play { background: #38bdf8; color: #000; width: 100%; margin-top: 10px; height: 50px; font-size: 18px; }
-        #status-msg { margin-top: 10px; color: #fbbf24; font-weight: bold; }
+        .btn-play { background: #10b981; color: white; width: 100%; height: 50px; font-size: 18px; border-radius: 8px; border: none; font-weight: bold; margin-top: 10px; cursor: pointer; }
+        #status-msg { margin-top: 10px; color: #fbbf24; font-size: 14px; font-weight: bold; }
     </style>
 </head>
 <body>
 
     <div class="wallet-section">
-        <small>MY BALANCE</small>
-        <div class="balance">$<span id="balance-amount">100.00</span></div>
-        <div style="display: flex; justify-content: space-around; margin-top: 10px;">
-            <button class="btn btn-deposit" onclick="deposit()">➕ DEPOSIT</button>
-            <button class="btn btn-withdraw" onclick="withdraw()">➖ WITHDRAW</button>
-        </div>
+        <small>HERREGA KOO (ETB)</small>
+        <div class="balance"><span id="balance-amount">500.00</span> ETB</div>
+    </div>
+
+    <p>Gatii Taphaa Filadhu:</p>
+    <div class="stake-options">
+        <button class="stake-btn selected" id="btn-10" onclick="selectStake(10, 'btn-10')">10 ETB</button>
+        <button class="stake-btn" id="btn-20" onclick="selectStake(20, 'btn-20')">20 ETB</button>
+        <button class="stake-btn" id="btn-30" onclick="selectStake(30, 'btn-30')">30 ETB</button>
     </div>
 
     <div class="ball-caller" id="current-ball">?</div>
-    <div id="status-msg">Click "PLAY" to start ($10 stake)</div>
+    <div id="status-msg">Stake filadhuutii "JALQABI" tuqi</div>
 
     <div class="grid" id="bingo-grid"></div>
 
-    <button class="btn btn-play" id="play-btn" onclick="startGame()">START GAME ($10)</button>
-    <button class="btn btn-play" style="background: #22c55e; display: none;" id="draw-btn" onclick="drawBall()">DRAW NEXT BALL</button>
+    <button class="btn-play" id="play-btn" onclick="startGame()">TAPHA JALQABI</button>
+    <button class="btn-play" style="background: #ef4444; display: none;" id="draw-btn" onclick="drawBall()">LAKKOOFSA BAASI</button>
 
     <script>
-        let balance = 100;
-        let stake = 10;
+        let balance = 500; 
+        let currentStake = 10;
         let boardNumbers = [];
         let calledBalls = [];
         let matches = 0;
-        const grid = document.getElementById('bingo-grid');
 
-        // Initialize Board
+        function selectStake(amount, btnId) {
+            currentStake = amount;
+            document.querySelectorAll('.stake-btn').forEach(b => b.classList.remove('selected'));
+            document.getElementById(btnId).classList.add('selected');
+        }
+
         function initBoard() {
+            const grid = document.getElementById('bingo-grid');
             grid.innerHTML = "";
             boardNumbers = [];
             for (let i = 0; i < 25; i++) {
@@ -60,18 +67,19 @@
         }
 
         function startGame() {
-            if (balance < stake) return alert("Balance kee gahaa miti!");
-            balance -= stake;
+            if (balance < currentStake) return alert("Qarshii gahaa hin qabdu!");
+            balance -= currentStake;
             updateUI();
             calledBalls = [];
             matches = 0;
             initBoard();
             document.getElementById('play-btn').style.display = "none";
             document.getElementById('draw-btn').style.display = "block";
-            document.getElementById('status-msg').innerText = "Game is Active! Draw balls...";
+            document.getElementById('status-msg').innerText = "TAPHA IRRA JIRTA (STAKE: " + currentStake + " ETB)";
         }
 
         function drawBall() {
+            if (calledBalls.length >= 90) return alert("Tapha xumurtee jirta!");
             let ball = Math.floor(Math.random() * 99) + 1;
             while(calledBalls.includes(ball)) ball = Math.floor(Math.random() * 99) + 1;
             calledBalls.push(ball);
@@ -80,24 +88,13 @@
             if (boardNumbers.includes(ball)) {
                 document.getElementById('cell-'+ball).classList.add('matched');
                 matches++;
-                if (matches >= 5) {
-                    let winAmount = stake * 3;
+                if (matches >= 5) { // 5 yoo guute (Bingo)
+                    let winAmount = currentStake * 2; // Dachaa (x2) deebisa
                     balance += winAmount;
-                    alert("BINGO! Ati mo'atteetta! $" + winAmount + " siif dabalameera.");
+                    alert("BINGO! Mo'atteetta! ETB " + winAmount + " herrega keetti dabalameera.");
                     resetUI();
                 }
             }
-        }
-
-        function deposit() {
-            let amount = prompt("Qarshii meeqa galchuu barbaadda?");
-            if (amount) { balance += parseFloat(amount); updateUI(); }
-        }
-
-        function withdraw() {
-            let amount = prompt("Qarshii meeqa baasuu barbaadda?");
-            if (amount <= balance) { balance -= parseFloat(amount); updateUI(); alert("Qarshiin $" + amount + " baafameera."); }
-            else { alert("Qarshii gahaa hin qabdu!"); }
         }
 
         function updateUI() { document.getElementById('balance-amount').innerText = balance.toFixed(2); }
