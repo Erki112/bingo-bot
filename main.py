@@ -17,7 +17,6 @@ def bingo(user_id):
 def bingo_simple():
     return render_template('index.html')
 
-
 # KAN ATI JETTE: User ID akka fudhatu taasifameera
 @app.route('/bingo/<int:user_id>')
 def bingo(user_id):
@@ -33,7 +32,7 @@ TOKEN = "8487920836:AAF-Ij4fkDMxrBA1xUmfSjJMwPybHjWV4Ps"
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_id = update.effective_user.id
     # URL irratti User ID ni dabalama (fakkeenya: /bingo/12345)
-    WEB_APP_URL = f"https://bingo-bot-g7ua.onrender.com/bingo/{user_id}" 
+    WEB_APP_URL = "https://bingo-bot-g7ua.onrender.com/bingo"
     
     keyboard = [[InlineKeyboardButton("🎮 Tapha Qaroo Bingo Jalqabi", web_app=WebAppInfo(url=WEB_APP_URL))]]
     reply_markup = InlineKeyboardMarkup(keyboard)
