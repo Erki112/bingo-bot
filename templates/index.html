@@ -3,30 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Qaro Bingo Professional</title>
+    <title>Qaroo Bingo</title>
     <style>
         body { background-color: #0f172a; color: white; font-family: 'Segoe UI', sans-serif; text-align: center; margin: 0; padding: 10px; }
-        .wallet-section { background: linear-gradient(135deg, #1e293b, #065f46); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #10b981; }
+        .app-header { margin-bottom: 15px; }
+        .app-header h1 { color: #fbbf24; margin: 0; font-size: 24px; text-transform: uppercase; letter-spacing: 2px; }
+        .wallet-section { background: linear-gradient(135deg, #1e293b, #065f46); padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px solid #10b981; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
         .balance { font-size: 28px; color: #10b981; font-weight: bold; }
         .stake-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 15px; }
-        .stake-btn { padding: 12px; border-radius: 8px; border: 2px solid #334155; background: #1e293b; color: white; cursor: pointer; font-weight: bold; font-size: 14px; }
+        .stake-btn { padding: 12px; border-radius: 8px; border: 2px solid #334155; background: #1e293b; color: white; cursor: pointer; font-weight: bold; font-size: 14px; transition: 0.2s; }
         .stake-btn.selected { border-color: #fbbf24; background: #fbbf24; color: black; box-shadow: 0 0 10px rgba(251, 191, 36, 0.5); }
-        .ball-caller { background: #ef4444; width: 65px; height: 65px; line-height: 65px; border-radius: 50%; font-size: 28px; margin: 10px auto; border: 3px solid #fff; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
-        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; padding: 10px; background: #1e293b; border-radius: 12px; }
-        .cell { background: #334155; border: 1px solid #475569; padding: 12px 0; border-radius: 8px; font-weight: bold; font-size: 16px; }
-        .cell.matched { background: #22c55e; color: white; transform: scale(1.05); border-color: #fff; }
-        .btn-play { background: #10b981; color: white; width: 100%; height: 50px; font-size: 18px; border-radius: 8px; border: none; font-weight: bold; margin-top: 10px; cursor: pointer; }
-        #status-msg { margin-top: 10px; color: #fbbf24; font-size: 14px; font-weight: bold; }
+        .ball-caller { background: #ef4444; width: 70px; height: 70px; line-height: 70px; border-radius: 50%; font-size: 32px; margin: 15px auto; border: 4px solid #fff; box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); font-weight: bold; }
+        .grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; padding: 10px; background: #1e293b; border-radius: 12px; border: 1px solid #334155; }
+        .cell { background: #334155; border: 1px solid #475569; padding: 14px 0; border-radius: 8px; font-weight: bold; font-size: 18px; transition: 0.3s; }
+        .cell.matched { background: #22c55e; color: white; transform: scale(1.05); border-color: #fff; box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
+        .btn-play { background: #10b981; color: white; width: 100%; height: 55px; font-size: 20px; border-radius: 10px; border: none; font-weight: bold; margin-top: 15px; cursor: pointer; text-transform: uppercase; }
+        #status-msg { margin-top: 10px; color: #fbbf24; font-size: 15px; font-weight: bold; min-height: 20px; }
     </style>
 </head>
 <body>
+
+    <div class="app-header">
+        <h1>QAROO BINGO</h1>
+    </div>
 
     <div class="wallet-section">
         <small>HERREGA KOO (ETB)</small>
         <div class="balance"><span id="balance-amount">500.00</span> ETB</div>
     </div>
 
-    <p>Gatii Taphaa Filadhu:</p>
+    <p style="font-size: 14px; margin-bottom: 8px;">Gatii Taphaa Filadhu:</p>
     <div class="stake-options">
         <button class="stake-btn selected" id="btn-10" onclick="selectStake(10, 'btn-10')">10 ETB</button>
         <button class="stake-btn" id="btn-20" onclick="selectStake(20, 'btn-20')">20 ETB</button>
@@ -88,8 +94,8 @@
             if (boardNumbers.includes(ball)) {
                 document.getElementById('cell-'+ball).classList.add('matched');
                 matches++;
-                if (matches >= 5) { // 5 yoo guute (Bingo)
-                    let winAmount = currentStake * 2; // Dachaa (x2) deebisa
+                if (matches >= 5) { 
+                    let winAmount = currentStake * 2; 
                     balance += winAmount;
                     alert("BINGO! Mo'atteetta! ETB " + winAmount + " herrega keetti dabalameera.");
                     resetUI();
@@ -101,6 +107,7 @@
         function resetUI() {
             document.getElementById('play-btn').style.display = "block";
             document.getElementById('draw-btn').style.display = "none";
+            document.getElementById('status-msg').innerText = "Tapha Mo'atteetta! Ammas taphadhu.";
             updateUI();
         }
 
