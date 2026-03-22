@@ -4,7 +4,7 @@ from threading import Thread
 from telegram import Update, WebAppInfo, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes
 
-# Flask setup
+# Flask setup - templates folder qulqulleessuu
 app = Flask(__name__, template_folder='templates')
 
 @app.route('/')
@@ -12,7 +12,7 @@ def home():
     return render_template('index.html')
 
 def run():
-    # Sarara kana sirriitti ilaali: port=port
+    # Asitti 'port=port' malee 'port-port' ta'uu hin qabu
     port = int(os.environ.get('PORT', 8080))
     app.run(host='0.0.0.0', port=port)
 
@@ -21,10 +21,11 @@ def keep_alive():
     t.daemon = True
     t.start()
 
-# Token kee isa haaraa
+# TOKEN kee isa haaraa
 TOKEN = "8487920836:AAFe77nalADov0H7ufj4GWZb0gYiEq5xdBQ"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    # Linkii Render keetii
     WEB_APP_URL = "https://bingo-bot-g7ua.onrender.com" 
     
     keyboard = [[InlineKeyboardButton("🎮 Join Professional Bingo", web_app=WebAppInfo(url=WEB_APP_URL))]]
