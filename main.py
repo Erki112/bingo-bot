@@ -12,6 +12,7 @@ def home():
     return render_template('index.html')
 
 def run():
+    # Sarara kana sirriitti ilaali: port=port
     port = int(os.environ.get('PORT', 8080))
     app.run(host='0.0.0.0', port=port)
 
@@ -20,7 +21,7 @@ def keep_alive():
     t.daemon = True
     t.start()
 
-# TOKEN kee isa haaraa as galchi
+# Token kee isa haaraa
 TOKEN = "8487920836:AAFe77nalADov0H7ufj4GWZb0gYiEq5xdBQ"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
