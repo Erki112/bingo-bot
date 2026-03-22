@@ -24,7 +24,7 @@ def keep_alive():
     t.start()
 
 # 2. Telegram Bot Logic
-TOKEN = "8487920836:AAFe77nalADov0H7ufj4GWZb0gYiEq5xdBQ"
+TOKEN = "8487920836:AAF-Ij4fkDMxrBA1xUmfSjJMwPybHjWV4Ps"
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     # Linkii Render keetii (Kun baay'ee murteessaadha)
