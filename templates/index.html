@@ -3,152 +3,150 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Qaroo Bingo Pro - Manual Mark</title>
+    <title>Qaroo Bingo Professional</title>
     <style>
-        :root { --bg: #0b0f1a; --card: #161b2c; --accent: #fbbf24; --green: #22c55e; --red: #ef4444; }
+        :root { --bg: #12182b; --card-bg: #1e253a; --accent: #fbbf24; --blue: #3b82f6; --green: #22c55e; --red: #ef4444; }
         body { background-color: var(--bg); color: white; font-family: 'Segoe UI', sans-serif; margin: 0; padding: 10px; text-align: center; }
         
-        /* Stats */
-        .header-stats { display: flex; justify-content: space-between; background: var(--card); padding: 10px; border-radius: 8px; margin-bottom: 10px; font-size: 12px; border-bottom: 2px solid var(--accent); }
-        .stat-val { color: var(--accent); font-weight: bold; font-size: 14px; display: block; }
+        /* Header Timer */
+        #game-timer { color: #5eead4; font-size: 16px; margin-bottom: 10px; font-weight: bold; height: 20px; }
 
-        /* Ball Caller Area */
-        .caller-zone { background: #1e293b; padding: 15px; border-radius: 15px; margin-bottom: 15px; border: 1px dashed #475569; }
-        .current-ball { width: 70px; height: 70px; line-height: 70px; background: var(--red); border-radius: 50%; font-size: 32px; font-weight: bold; margin: 0 auto; border: 4px solid white; box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
-        .recent-balls { display: flex; justify-content: center; gap: 5px; margin-top: 10px; min-height: 30px; }
-        .small-ball { width: 25px; height: 25px; background: #475569; border-radius: 50%; font-size: 10px; line-height: 25px; }
+        /* Card Selector (1-130) */
+        .selector-grid { 
+            display: grid; grid-template-columns: repeat(10, 1fr); gap: 4px; 
+            background: var(--card-bg); padding: 8px; border-radius: 8px; 
+            max-height: 250px; overflow-y: auto; border: 1px solid #334155;
+        }
+        .card-no { 
+            background: #2d3748; padding: 8px 0; border-radius: 4px; font-size: 11px; 
+            cursor: pointer; border: 1px solid transparent; transition: 0.2s;
+        }
+        .card-no.taken { background: var(--red); cursor: not-allowed; opacity: 0.7; }
+        .card-no.selected { background: var(--green); border-color: white; }
 
-        /* Bingo Board */
-        .bingo-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 15px auto; width: 95%; }
-        .cell { background: var(--card); height: 60px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: bold; border: 1px solid #2d3748; cursor: pointer; transition: 0.2s; }
-        /* Namni yoo tuqe qofa magariisa ta'a */
-        .cell.marked { background: var(--green); border-color: #fff; transform: scale(0.95); }
+        /* My Playing Card (Bottom) */
+        .my-card-area { margin-top: 20px; display: flex; flex-direction: column; align-items: center; }
+        .bingo-board { 
+            display: grid; grid-template-columns: repeat(5, 1fr); gap: 5px; 
+            background: #000; padding: 10px; border-radius: 12px; width: 280px; 
+        }
+        .cell { 
+            background: #334155; height: 45px; display: flex; align-items: center; 
+            justify-content: center; border-radius: 6px; font-weight: bold; font-size: 16px; 
+            cursor: pointer; border: 1px solid #4a5568;
+        }
+        .cell.marked { background: var(--green); box-shadow: inset 0 0 10px rgba(0,0,0,0.5); }
 
-        /* Buttons */
-        .action-btn { width: 100%; padding: 18px; border-radius: 12px; border: none; font-size: 18px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        .btn-bingo { background: var(--accent); color: black; display: none; }
-        .btn-join { background: var(--green); color: white; }
-        
-        #timer-msg { font-size: 14px; color: var(--accent); margin: 10px 0; }
+        /* Footer Buttons */
+        .footer-btns { display: flex; gap: 10px; margin-top: 15px; }
+        .btn { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; color: white; }
+        .btn-refresh { background: var(--accent); color: black; }
+        .btn-select { background: var(--blue); }
+        .btn-join { background: var(--green); }
+
+        /* Called Ball Display */
+        .caller-circle { 
+            width: 60px; height: 60px; background: var(--red); border-radius: 50%; 
+            line-height: 60px; font-size: 24px; font-weight: bold; margin: 10px auto; 
+            border: 3px solid white; display: none;
+        }
     </style>
 </head>
 <body>
 
-    <div class="header-stats">
-        <div>WALLET<span class="stat-val" id="wallet">500.00</span></div>
-        <div>STAKE<span class="stat-val">10 ETB</span></div>
-        <div>CARD ID<span class="stat-val" id="card-id">#--</span></div>
-        <div>PLAYERS<span class="stat-val">128</span></div>
+    <div id="game-timer">Starting game in 60 sec</div>
+
+    <div class="selector-grid" id="card-selector">
+        <!-- 1-130 Numbers will be here -->
     </div>
 
-    <div class="caller-zone">
-        <div class="current-ball" id="main-ball">?</div>
-        <div class="recent-balls" id="history"></div>
-        <div id="timer-msg">Waiting for players...</div>
+    <div class="my-card-area">
+        <div class="caller-circle" id="caller">?</div>
+        <div class="bingo-board" id="board">
+            <!-- 5x5 Grid -->
+        </div>
     </div>
 
-    <div class="bingo-grid" id="grid">
-        <!-- Card numbers will appear here -->
+    <div class="footer-btns">
+        <button class="btn btn-refresh" onclick="generateNewCard()">Refresh</button>
+        <button class="btn btn-select">Select Number</button>
+        <button class="btn btn-join" id="join-btn" onclick="joinGame()">Join Game</button>
     </div>
-
-    <button class="action-btn btn-join" id="join-btn" onclick="startWaiting()">JOIN GAME</button>
-    <button class="action-btn btn-bingo" id="bingo-btn" onclick="checkBingo()">BINGO!</button>
 
     <script>
-        let wallet = 500;
         let myNumbers = [];
         let calledBalls = [];
-        let markedNumbers = [];
-        let gameStarted = false;
+        let isJoined = false;
+        let selectedCards = [13, 14, 16, 26, 27, 33, 38, 42, 47, 57, 63, 67, 76, 77, 92, 94, 96, 98, 99, 108, 119, 129]; // Simulation: cards already taken
 
-        // 1. Generate Random Card (Pro 5x5)
-        function generateCard() {
-            const grid = document.getElementById('grid');
-            grid.innerHTML = '';
+        // 1. Create 1-130 Selector
+        const selector = document.getElementById('card-selector');
+        for (let i = 1; i <= 130; i++) {
+            let div = document.createElement('div');
+            div.className = 'card-no';
+            if(selectedCards.includes(i)) div.classList.add('taken');
+            div.innerText = i;
+            div.onclick = function() {
+                if(isJoined || this.classList.contains('taken')) return;
+                document.querySelectorAll('.card-no').forEach(d => d.classList.remove('selected'));
+                this.classList.add('selected');
+            };
+            selector.appendChild(div);
+        }
+
+        // 2. Generate 5x5 Card
+        function generateNewCard() {
+            if(isJoined) return;
+            const board = document.getElementById('board');
+            board.innerHTML = '';
             myNumbers = [];
             while(myNumbers.length < 25) {
-                let num = Math.floor(Math.random() * 75) + 1;
-                if(!myNumbers.includes(num)) myNumbers.push(num);
+                let r = Math.floor(Math.random() * 75) + 1;
+                if(!myNumbers.includes(r)) myNumbers.push(r);
             }
-            myNumbers.sort((a,b) => a-b);
-            myNumbers.forEach(n => {
-                let div = document.createElement('div');
-                div.className = 'cell';
-                div.innerText = n;
-                div.onclick = () => markCell(n, div);
-                grid.appendChild(div);
+            myNumbers.forEach(num => {
+                let cell = document.createElement('div');
+                cell.className = 'cell';
+                cell.innerText = num;
+                cell.onclick = () => { if(calledBalls.includes(num)) cell.classList.add('marked'); };
+                board.appendChild(cell);
             });
-            document.getElementById('card-id').innerText = "#" + Math.floor(Math.random() * 1000);
         }
 
-        // 2. Harkaan Tuquu (Manual Marking)
-        function markCell(num, el) {
-            if(!gameStarted) return;
-            // Seera: Lakkoofsi sun yoo waamame qofa mark gochuu danda'a
-            if(calledBalls.includes(num)) {
-                if(!markedNumbers.includes(num)) {
-                    markedNumbers.push(num);
-                    el.classList.add('marked');
-                    // Yoo mark godhe, button Bingo ni mul'ata
-                    if(markedNumbers.length >= 5) {
-                        document.getElementById('bingo-btn').style.display = 'block';
-                    }
-                }
-            } else {
-                alert("Lakkoofsi kun ammatti hin waamamne!");
-            }
-        }
+        // 3. Join Game & Timer
+        function joinGame() {
+            const selected = document.querySelector('.card-no.selected');
+            if(!selected) return alert("Maaloo dura card tokko filadhu!");
+            
+            isJoined = true;
+            document.getElementById('join-btn').innerText = "Joined ✅";
+            document.getElementById('join-btn').disabled = true;
 
-        // 3. Taphni Jalqabuu (Waiting Logic)
-        function startWaiting() {
-            document.getElementById('join-btn').style.display = 'none';
-            let timeLeft = 10; // Salphaaf secundii 10 godheera (Ati 300 gochuu dandeessa)
-            let timer = setInterval(() => {
-                document.getElementById('timer-msg').innerText = `Game starts in: ${timeLeft}s`;
-                if(timeLeft <= 0) {
-                    clearInterval(timer);
-                    startGame();
-                }
+            let timeLeft = 60; // Seconds
+            let countdown = setInterval(() => {
                 timeLeft--;
+                document.getElementById('game-timer').innerText = `Starting game in ${timeLeft} sec`;
+                if(timeLeft <= 0) {
+                    clearInterval(countdown);
+                    document.getElementById('game-timer').innerText = "GAME LIVE!";
+                    startDrawing();
+                }
             }, 1000);
         }
 
-        // 4. Lakkoofsa Ofumaan Waamuu (Auto Draw)
-        function startGame() {
-            gameStarted = true;
-            document.getElementById('timer-msg').innerText = "GAME LIVE: Watch the balls!";
+        // 4. Draw Balls
+        function startDrawing() {
+            document.getElementById('caller').style.display = 'block';
             let drawInterval = setInterval(() => {
-                if(calledBalls.length >= 75) { clearInterval(drawInterval); return; }
-
+                if(calledBalls.length >= 75) clearInterval(drawInterval);
                 let ball;
                 do { ball = Math.floor(Math.random() * 75) + 1; } while(calledBalls.includes(ball));
-                
                 calledBalls.push(ball);
-                document.getElementById('main-ball').innerText = ball;
-                
-                // History dabalama
-                let hist = document.getElementById('history');
-                let s = document.createElement('div');
-                s.className = 'small-ball';
-                s.innerText = ball;
-                hist.prepend(s);
-            }, 4000); // Secundii 4 gidduutti ball 1 waama (hordofuuf akka mijatu)
+                document.getElementById('caller').innerText = ball;
+            }, 4000);
         }
 
-        // 5. Bingo Check (Verify if user actually won)
-        function checkBingo() {
-            // Seera: Mark kan godhe hundi baallii waamame keessa jiraachuu qaba
-            let isLegit = markedNumbers.every(n => calledBalls.includes(n));
-            
-            if(isLegit && markedNumbers.length >= 5) {
-                alert("CONGRATULATIONS! BINGO! Ati mo'atteetta.");
-                location.reload();
-            } else {
-                alert("BINGO SOBAA! Of eeggannoon hordofii tuqi.");
-            }
-        }
-
-        generateCard();
+        generateNewCard();
     </script>
 </body>
 </html>
